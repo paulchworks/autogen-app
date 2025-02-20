@@ -66,7 +66,3 @@ Send the following messages:
 4. **Groupchat** if you want to use Groupchat take a look at autogen_group_chat.py
 
 
-![chat interface](/chat.png "Chat")
-
-Have fun!
-
