@@ -9,8 +9,8 @@ This is a simple implementation of Autogen Agents using FastApi as backend and a
 
 1. **Clone this repo**
 ```
-git clone https://github.com/bonadio/autogenwebdemo.git
-cd autogenwebdemo
+git clone
+cd autogen-app
 ```
 2. **Configure backend**
 
