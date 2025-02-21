@@ -48,8 +48,8 @@ npm run dev
 ```
 Open you browser on http://localhost:5173/ or the port shown 
 
-Try doing a web search by typing "What are the top news in AI today?"
+**Web Search:** Try doing a web search by typing "What are the top news in AI today?"
 
-**Groupchat** if you want to use Groupchat take a look at autogen_group_chat.py
+**Groupchat:** if you want to use Groupchat take a look at autogen_group_chat.py
 
 
