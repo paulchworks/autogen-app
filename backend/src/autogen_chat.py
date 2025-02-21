@@ -1,43 +1,41 @@
 import autogen
 from user_proxy_webagent import UserProxyWebAgent
 import asyncio
+import requests
+import json
+import os
 
 config_list = [
     {
-        "model": "gpt-3.5-turbo",
+        "model": "gpt-4o-mini",
     }
 ]
 llm_config_assistant = {
-    "model":"gpt-3.5-turbo",
+    "model":"gpt-4o-mini",
     "temperature": 0,
     "config_list": config_list,
         "functions": [
         {
-            "name": "search_db",
-            "description": "Search database for order status",
+            "name": "web_search",
+            "description": "Search the web for information",
             "parameters": {
                 "type": "object",
                 "properties": {
-                    "order_number": {
-                        "type": "integer",
-                        "description": "Order number",
-                    },
-                    "customer_number": {
+                    "query": {
                         "type": "string",
-                        "description": "Customer number",
+                        "description": "Search query",
                     }
                 },
-                "required": ["order_number","customer_number"],
+                "required": ["query"],
             },
         },
     ],
 }
 llm_config_proxy = {
-    "model":"gpt-3.5-turbo-0613",
+    "model":"gpt-4o-mini",
     "temperature": 0,
     "config_list": config_list,
 }
-
 
 #############################################################################################
 # this is where you put your Autogen logic, here I have a simple 2 agents with a function call
@@ -53,17 +51,17 @@ class AutogenChat():
             llm_config=llm_config_assistant,
             system_message="""You are a helpful assistant, help the user find the status of his order. 
             Only use the tools provided to do the search. Only execute the search after you have all the information needed. 
-            When you ask a question, always add the word "BRKT"" at the end.
-            When you responde with the status add the word TERMINATE"""
+            When you ask a question, always add the word "Let me know" at the end.
+            When you respond with the status add the word Thank You"""
         )
         self.user_proxy = UserProxyWebAgent(  
             name="user_proxy",
             human_input_mode="ALWAYS", 
             max_consecutive_auto_reply=10,
-            is_termination_msg=lambda x: x.get("content", "") and x.get("content", "").rstrip().endswith("TERMINATE"),
+            is_termination_msg=lambda x: x.get("content", "") and x.get("content", "").rstrip().endswith("Thank you"),
             code_execution_config=False,
             function_map={
-                "search_db": self.search_db
+                "web_search": self.web_search
             }
         )
 
@@ -77,7 +75,21 @@ class AutogenChat():
             message=message
         )
 
-    #MOCH Function call 
-    def search_db(self, order_number=None, customer_number=None):
-        return "Order status: delivered TERMINATE"
-
+    # Function call 
+    def web_search(self, query=None):
+        endpoint = os.getenv('BING_ENDPOINT')
+        subscription_key = os.getenv('BING_KEY')
+        headers = {'Ocp-Apim-Subscription-Key': subscription_key}
+        mkt = 'en-US'
+        count = '5'
+        freshness = "Week"
+        params = { 'q': str(query), 'mkt': mkt , 'count': count, 'freshness': freshness}
+        web_search_result = requests.get(endpoint, headers=headers, params=params)
+    
+        # Check if the request was successful
+        if web_search_result.status_code == 200:
+            # Convert the JSON response to a string and return it
+            return json.dumps(web_search_result.json())
+        else:
+            # If the request failed, return an error message as a string
+            return f"Error: Unable to fetch data. Status code: {web_search_result.status_code}"
