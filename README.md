@@ -48,20 +48,7 @@ npm run dev
 ```
 Open you browser on http://localhost:5173/ or the port shown 
 
-Send the following messages:
-```
--> Hi
-<- Hello! How can I assist you today?
-
--> What the status of my order?
-<- Sure, I can help you with that. Could you please provide me with your order number and customer number?
-
--> Order 222
-<- Thank you for providing the order number. Could you also please provide me with your customer number?
-
--> customer 333
-<- The status of your order with order number 222 and customer number 333 is "delivered". Is there anything else I can assist you with?
-```
+3. Try doing a web search by typing "What are the top news in AI today?"
 
 4. **Groupchat** if you want to use Groupchat take a look at autogen_group_chat.py
 
