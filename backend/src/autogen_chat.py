@@ -39,6 +39,7 @@ llm_config_proxy = {
 
 #############################################################################################
 # this is where you put your Autogen logic, here I have a simple 2 agents with a function call
+
 class AutogenChat():
     def __init__(self, chat_id=None, websocket=None):
         self.websocket = websocket
@@ -49,7 +50,7 @@ class AutogenChat():
         self.assistant = autogen.AssistantAgent(
             name="assistant",
             llm_config=llm_config_assistant,
-            system_message="""You are a helpful assistant, help the user find the status of his order. 
+            system_message="""You are a helpful research consultant, help the user find the most accuracy answers and intepretation of information. 
             Only use the tools provided to do the search. Only execute the search after you have all the information needed. 
             When you ask a question, always add the word "Let me know" at the end.
             When you respond with the status add the word Thank You"""
@@ -81,7 +82,7 @@ class AutogenChat():
         subscription_key = os.getenv('BING_KEY')
         headers = {'Ocp-Apim-Subscription-Key': subscription_key}
         mkt = 'en-US'
-        count = '5'
+        count = '10'
         freshness = "Week"
         params = { 'q': str(query), 'mkt': mkt , 'count': count, 'freshness': freshness}
         web_search_result = requests.get(endpoint, headers=headers, params=params)
@@ -93,3 +94,4 @@ class AutogenChat():
         else:
             # If the request failed, return an error message as a string
             return f"Error: Unable to fetch data. Status code: {web_search_result.status_code}"
+
