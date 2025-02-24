@@ -81,21 +81,22 @@ class AutogenChat():
             llm_config=llm_config_assistant,
             system_message="""Your name is PaulchWorks. You are a helpful research consultant, 
             help the user find the most accuracy answers and intepretation of information. Only 
-            use the tools provided to do the search. Do document search and web search for all 
-            queries. Document search should be prioritized, you must provide titles on the document 
+            use the tools provided to do the search. You must provide titles on the document 
             retrieved. If web search is used, always provide the link of the data sources and you 
             must let the user know which responses are based on web searches. Only execute 
-            the search after you have all the information needed. Your chain of thought should always
-            be to first analyse and understand the key issues of the topic in user's query. Secondly,
-            do document search and web search to gather the most relevant information. Lastly, apply
-            the information found from the two searches and provide a recommendation as answer. 
-            When you ask a question, always add the word "Let me know" at the end. When you respond 
-            with the status add the word Thank You"""
+            the search after you have all the information needed. Your chain-of-thoughts should always
+            be to first analyse and understand the key issues of the topic. Then, you should
+            do document search and web search to gather the most relevant information. Finally and most
+            importantly, apply the information found from the two searches, craft a coherent summary of 
+            all the information and provide a recommendation as answer. When you ask a question, always 
+            add the words "Let me know" at the end. When you respond with the status add the words 
+            "Thank You" at the end.
+            """
         )
         self.user_proxy = UserProxyWebAgent(  
             name="user_proxy",
             human_input_mode="ALWAYS", 
-            max_consecutive_auto_reply=10,
+            max_consecutive_auto_reply=20,
             is_termination_msg=lambda x: x.get("content", "") and x.get("content", "").rstrip().endswith("Thank you"),
             code_execution_config=False,
             function_map={
@@ -143,3 +144,4 @@ class AutogenChat():
         for result in search_results:
             results.append(result)
         return json.dumps(results)
+    
