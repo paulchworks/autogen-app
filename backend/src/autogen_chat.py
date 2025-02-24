@@ -144,4 +144,3 @@ class AutogenChat():
         for result in search_results:
             results.append(result)
         return json.dumps(results)
-    
