@@ -84,7 +84,7 @@ class AutogenChat():
             use the tools provided to do the search. Do document search and web search for all 
             queries. Document search should be prioritized, you must provide titles on the document 
             retrieved. If web search is used, always provide the link of the data sources and you 
-            must let the user know which are the responses are based on web searches. Only execute 
+            must let the user know which responses are based on web searches. Only execute 
             the search after you have all the information needed. Your chain of thought should always
             be to first analyse and understand the key issues of the topic in user's query. Secondly,
             do document search and web search to gather the most relevant information. Lastly, apply
