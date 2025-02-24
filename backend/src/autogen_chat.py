@@ -4,6 +4,20 @@ import asyncio
 import requests
 import json
 import os
+from azure.search.documents import SearchClient
+from azure.core.credentials import AzureKeyCredential
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
+
+search_client = SearchClient(
+    endpoint= os.getenv("AZURE_SEARCH_SERVICE_ENDPOINT"),
+    index_name= os.getenv("AZURE_SEARCH_INDEX"),
+    key= os.getenv("AZURE_SEARCH_API_KEY"),
+    credential=AzureKeyCredential(str(os.getenv("AZURE_SEARCH_API_KEY")))
+ )
+
 
 config_list = [
     {
@@ -29,6 +43,21 @@ llm_config_assistant = {
                 "required": ["query"],
             },
         },
+        {
+            "name": "document_search",
+            "description": "Search the document for information",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Search query",
+                    }
+                },
+                "required": ["query"],
+            },
+        }
+        
     ],
 }
 llm_config_proxy = {
@@ -50,10 +79,14 @@ class AutogenChat():
         self.assistant = autogen.AssistantAgent(
             name="assistant",
             llm_config=llm_config_assistant,
-            system_message="""You are a helpful research consultant, help the user find the most accuracy answers and intepretation of information. 
-            Only use the tools provided to do the search. Only execute the search after you have all the information needed. 
-            When you ask a question, always add the word "Let me know" at the end.
-            When you respond with the status add the word Thank You"""
+            system_message="""You are a helpful research consultant, help the user find the most 
+            accuracy answers and intepretation of information. Only use the tools provided to do 
+            the search. Do document search and web search for all queries. Document search should 
+            be prioritized, you must provide titles on the document retrieved. If web search is 
+            used, always provide the link of the data sources and you must let the user know which 
+            are the responses are based on web searches. Only execute the search after you have all 
+            the information needed. When you ask a question, always add the word "Let me know" at 
+            the end. When you respond with the status add the word Thank You"""
         )
         self.user_proxy = UserProxyWebAgent(  
             name="user_proxy",
@@ -62,10 +95,11 @@ class AutogenChat():
             is_termination_msg=lambda x: x.get("content", "") and x.get("content", "").rstrip().endswith("Thank you"),
             code_execution_config=False,
             function_map={
-                "web_search": self.web_search
+                "web_search": self.web_search,
+                "document_search": self.document_search
             }
         )
-
+    
         # add the queues to communicate 
         self.user_proxy.set_queues(self.client_sent_queue, self.client_receive_queue)
 
@@ -95,3 +129,13 @@ class AutogenChat():
             # If the request failed, return an error message as a string
             return f"Error: Unable to fetch data. Status code: {web_search_result.status_code}"
 
+    def document_search(self, query=None):
+        search_results = search_client.search(
+            search_text=query,
+            select=["title", "chunk"],
+            top=10
+            )
+        results = []
+        for result in search_results:
+            results.append(result)
+        return json.dumps(results)

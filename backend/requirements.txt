@@ -1,3 +1,5 @@
 fastapi
 uvicorn[standard]
 pyautogen
+azure-search-documents
+python-dotenv
