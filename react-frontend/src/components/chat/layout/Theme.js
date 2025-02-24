@@ -28,6 +28,7 @@ let theme = createTheme({
     mixins: {
       toolbar: {
         minHeight: 48,
+        backgroundColor: '#40E0D0',
       },
     },
   });
@@ -38,7 +39,7 @@ let theme = createTheme({
       MuiDrawer: {
         styleOverrides: {
           paper: {
-            backgroundColor: '#081627',
+            background: '#03d7fc',
           },
         },
       },

@@ -22,8 +22,11 @@ export default function Navigator(props) {
     return (
         <Drawer variant="permanent" {...other}>
             <List disablePadding>
-                <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}>
+                <ListItem sx={{ ...item, ...itemCategory, fontSize: 16, color: '#ffg' }}>
                 PaulchWorks Consultant
+                </ListItem>
+                <ListItem sx={{ ...item, ...itemCategory, fontSize: 12, color: '#ffg' }}>
+                This is a sample chat application built with Autogen and Azure AI Search
                 </ListItem>
             </List>
         </Drawer>
