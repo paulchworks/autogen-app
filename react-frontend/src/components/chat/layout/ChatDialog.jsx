@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import {useState, Fragment} from 'react';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
@@ -15,6 +15,7 @@ import CycloneIcon from '@mui/icons-material/Cyclone';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
+import { parseMarkdown } from './utils/markdownParser.jsx';
 
 function CustomizedInputBase() {
     const sendChatMessageAsync = useBoundStore((state) => state.sendChatMessageAsync)
@@ -92,7 +93,14 @@ function CustomizedInputBase() {
 }
 
 const ChatDialog = () => {
-    const chatMessages = useBoundStore((state) => state.chatMessages)
+    const chatMessages = useBoundStore((state) => state.chatMessages);
+    const messagesEndRef = useRef(null);
+
+    useEffect(() => {
+        // Scroll to the bottom whenever new messages are added
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, [chatMessages]);
+    
     return (
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column',   }}>
             <Box sx={{  flex: 1, display: 'flex', justifyContent:"flex-end", alignItems:"end" }} >
@@ -111,7 +119,7 @@ const ChatDialog = () => {
                                 </Grid>
                             <Grid  item xs={11} sx={{  borderTop:"1px solid #2222"  }}>
                                 <Typography sx={{ my: 1.5, mx: 1 , whiteSpace: "pre-line"}} color="text.secondary" >
-                                    {message}
+                                    {parseMarkdown(message)}
                                 </Typography>
                             </Grid>
                         </Fragment>
