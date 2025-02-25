@@ -1,3 +1,6 @@
+![image](https://github.com/user-attachments/assets/2927a644-0fac-46f1-8662-be2827156a92)
+
+
 # Autogen with FastApi backend and React frontend
 
 This is a simple implementation of Autogen Agents using FastApi as backend and a frontend client using React
