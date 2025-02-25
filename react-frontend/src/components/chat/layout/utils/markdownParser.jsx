@@ -16,6 +16,13 @@ export const parseMarkdown = (text) => {
           {part.replace('###', '').trim()}
         </Typography>
       );
+    } else if (part.startsWith('#')) {
+      // Handle headers
+      return (
+        <Typography key={index} variant="h6" component="div" sx={{ fontWeight: 'bold', my: 1 }}>
+          {part.replace('#', '').trim()}
+        </Typography>
+      );
     } else if (part.startsWith('**') && part.endsWith('**')) {
       // Handle bold text
       return (
