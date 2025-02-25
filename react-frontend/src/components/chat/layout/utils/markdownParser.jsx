@@ -6,8 +6,8 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 
 const parseInlineMarkdown = (text) => {
-  // Split the text into parts based on bold (**...**) or italic (*...*) patterns
-  const parts = text.split(/(\*\*.*?\*\*|\*.*?\*)/);
+  // Split the text into parts based on Markdown patterns (bold, italic, links)
+  const parts = text.split(/(\*\*.*?\*\*|\*.*?\*|\[.*?\]\(.*?\))/);
 
   return parts.map((part, index) => {
     if (part.startsWith('**') && part.endsWith('**')) {
@@ -24,6 +24,26 @@ const parseInlineMarkdown = (text) => {
           {part.replace(/\*/g, '')}
         </Typography>
       );
+    } else if (/\[.*?\]\(.*?\)/.test(part)) {
+      // Handle links
+      const [_, text, url] = part.match(/\[(.*?)\]\((.*?)\)/);
+      return (
+        <Typography
+          key={index}
+          component="a"
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          sx={{
+            color: 'primary.main',
+            textDecoration: 'underline',
+            cursor: 'pointer',
+            '&:hover': { textDecoration: 'none' },
+          }}
+        >
+          {text}
+        </Typography>
+      );
     } else {
       // Plain text
       return part;
@@ -38,8 +58,8 @@ export const parseMarkdown = (text) => {
   const blocks = text.split(/\n{2,}/);
 
   return blocks.map((block, index) => {
-    // Handle headers
-    if (block.startsWith('#')) {
+    // Handle headers (# through ######)
+    if (block.match(/^#+\s+/)) {
       const level = block.match(/^#+/)[0].length; // Count the number of '#' characters
       const headerText = block.replace(/^#+\s*/, '').trim();
       return (
@@ -76,38 +96,6 @@ export const parseMarkdown = (text) => {
             ))}
           </List>
         </Box>
-      );
-    }
-    // Handle links
-    else if (/\[.*?\]\(.*?\)/.test(block)) {
-      const parts = block.split(/(\[.*?\]\(.*?\))/);
-      return (
-        <Typography key={index} paragraph sx={{ my: 1 }}>
-          {parts.map((part, idx) => {
-            if (/\[.*?\]\(.*?\)/.test(part)) {
-              const [_, text, url] = part.match(/\[(.*?)\]\((.*?)\)/);
-              return (
-                <Typography
-                  key={idx}
-                  component="a"
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  sx={{
-                    color: 'primary.main',
-                    textDecoration: 'underline',
-                    cursor: 'pointer',
-                    '&:hover': { textDecoration: 'none' },
-                  }}
-                >
-                  {text}
-                </Typography>
-              );
-            } else {
-              return parseInlineMarkdown(part);
-            }
-          })}
-        </Typography>
       );
     }
     // Default: Handle paragraphs
