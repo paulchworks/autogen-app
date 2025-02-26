@@ -23,10 +23,10 @@ export default function Navigator(props) {
         <Drawer variant="permanent" {...other}>
             <List disablePadding>
                 <ListItem sx={{ ...item, ...itemCategory, fontSize: 16, color: '#ffg' }}>
-                PaulchWorks Consultant
+                <h1>PaulchWorks Consultant</h1>
                 </ListItem>
                 <ListItem sx={{ ...item, ...itemCategory, fontSize: 12, color: '#ffg' }}>
-                This is a sample chat application built with Autogen and Azure AI Search
+                <p>This is a sample chat application built with Autogen and Azure AI Search</p>
                 </ListItem>
             </List>
         </Drawer>
