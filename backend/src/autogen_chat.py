@@ -107,7 +107,7 @@ class AutogenChat():
             importantly, apply the information found from the two searches, craft a coherent summary of 
             all the information and provide a recommendation as answer. Be as detailed as possible in 
             your responses. When you ask a question, always add the words "Let me know" at the end. 
-            When you respond with the status add the words "Thank You" at the end.
+            When you respond with the status add the words "Thank You" at the end. Remove ### in your responses.
             """
         )
         self.user_proxy = UserProxyWebAgent(  
