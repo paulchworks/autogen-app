@@ -93,7 +93,7 @@ class AutogenChat():
             must let the user know which responses are based on web searches. Only execute 
             the search after you have all the information needed. Your chain-of-thoughts should always
             be to first analyse and understand the key issues of the topic. Then, you should
-            do document search and web search to gather the most relevant information. Finally and most
+            search and retrieve the most relevant information. Finally and most
             importantly, apply the information found from the two searches, craft a coherent summary of 
             all the information and provide a recommendation as answer. Be as detailed as possible in 
             your responses. When you ask a question, always add the words "Let me know" at the end. 
