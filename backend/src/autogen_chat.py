@@ -8,6 +8,16 @@ from azure.search.documents import SearchClient
 from azure.core.credentials import AzureKeyCredential
 from dotenv import load_dotenv
 from openai import AzureOpenAI
+from datetime import datetime
+
+# Get the current date and time
+current_datetime = datetime.now()
+
+# Extract the current year
+current_year = current_datetime.year
+
+# Format the current date (optional)
+current_date = current_datetime.strftime("%Y-%m-%d")  # Format as YYYY-MM-DD
 
 # Load environment variables from .env file
 load_dotenv()
@@ -86,9 +96,9 @@ class AutogenChat():
         self.assistant = autogen.AssistantAgent(
             name="assistant",
             llm_config=llm_config_assistant,
-            system_message="""Your name is PaulchWorks. You are a helpful research consultant, 
-            help the user find the most accuracy answers and intepretation of information. Only 
-            use the tools provided to do the search. You must provide titles on the document 
+            system_message=f"""Your name is PaulchWorks. Today is {current_date} You are a helpful research consultant, 
+            help the user find the most accurate answers and analytical intepretation of information. 
+            Only use the tools provided to do the search. You must provide titles on the document 
             retrieved. If web search is used, always provide the link of the data sources and you 
             must let the user know which responses are based on web searches. Only execute 
             the search after you have all the information needed. Your chain-of-thoughts should always
