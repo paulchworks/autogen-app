@@ -7,9 +7,16 @@ import os
 from azure.search.documents import SearchClient
 from azure.core.credentials import AzureKeyCredential
 from dotenv import load_dotenv
+from openai import AzureOpenAI
 
 # Load environment variables from .env file
 load_dotenv()
+
+llm_client = AzureOpenAI(
+  api_key = os.getenv("AZURE_OPENAI_API_KEY"),  
+  api_version = "2024-06-01",
+  azure_endpoint =os.getenv("AZURE_OPENAI_ENDPOINT") 
+)
 
 search_client = SearchClient(
     endpoint= os.getenv("AZURE_SEARCH_SERVICE_ENDPOINT"),
@@ -135,12 +142,33 @@ class AutogenChat():
             return f"Error: Unable to fetch data. Status code: {web_search_result.status_code}"
 
     def document_search(self, query=None):
+        # Step 1: Generate Embeddings
+        embeddings = llm_client.embeddings.create(
+            input=query,
+            model="text-embedding-3-large"
+        )
+        embedding_vector = embeddings.data[0].embedding  # Extract the embedding vector
+
+        # Step 2: Perform Hybrid Search
         search_results = search_client.search(
-            search_text=query,
-            select=["title", "chunk"],
-            top=10
-            )
+            search_text=query,  # Full-text search query
+            vector_queries=[  # Vector query
+                {
+                    "kind": "vector",  # Specify the kind of query
+                    "vector": embedding_vector,  # Embedding vector
+                    "fields": "text_vector",  # Field in the index containing embeddings
+                    "k": 10  # Number of nearest neighbors to retrieve
+                }
+            ],
+            select=["title", "chunk"],  # Fields to include in the results
+            top=10,  # Maximum number of results to return
+            query_type="semantic",  # Enable semantic search
+            semantic_configuration_name=os.getenv("AZURE_SEARCH_SEMANTIC_SEARCH_CONFIG")  # Semantic config name
+        )
+
+        # Step 3: Process Results
         results = []
         for result in search_results:
             results.append(result)
+
         return json.dumps(results)
