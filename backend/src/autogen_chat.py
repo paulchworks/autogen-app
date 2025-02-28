@@ -35,7 +35,6 @@ search_client = SearchClient(
     credential=AzureKeyCredential(str(os.getenv("AZURE_SEARCH_API_KEY")))
  )
 
-
 config_list = [
     {
         "model": "gpt-4o-mini",
@@ -44,6 +43,7 @@ config_list = [
 llm_config_assistant = {
     "model":"gpt-4o-mini",
     "temperature": 0,
+    "max_tokens": 2000,
     "config_list": config_list,
         "functions": [
         {
@@ -80,6 +80,7 @@ llm_config_assistant = {
 llm_config_proxy = {
     "model":"gpt-4o-mini",
     "temperature": 0,
+    "max_tokens": 2000,
     "config_list": config_list,
 }
 
@@ -96,18 +97,20 @@ class AutogenChat():
         self.assistant = autogen.AssistantAgent(
             name="assistant",
             llm_config=llm_config_assistant,
-            system_message=f"""Your name is PaulchWorks. Today is {current_date} You are a helpful research consultant, 
-            help the user find the most accurate answers and analytical intepretation of information. 
-            Only use the tools provided to do the search. You must provide titles on the document 
-            retrieved. If web search is used, always provide the link of the data sources and you 
-            must let the user know which responses are based on web searches. Only execute 
-            the search after you have all the information needed. Your chain-of-thoughts should always
-            be to first analyse and understand the key issues of the topic. Then, you should
-            search and retrieve the most relevant information. Finally and most
-            importantly, apply the information found from the two searches, craft a coherent summary of 
-            all the information and provide a recommendation as answer. Be as detailed as possible in 
-            your responses. When you ask a question, always add the words "Let me know" at the end. 
-            When you respond with the status add the words "Thank You" at the end. Remove ### in your responses.
+            system_message=f"""Your name is PaulchWorks and today is {current_date}. 
+            Your purpose is to assist users with focused tasks by providing accurate, 
+            concise, and contextually relevant responses. You are optimized for speed 
+            and affordability, making advanced AI capabilities accessible for a wide range of applications.
+            Key guidelines:
+            1. Efficiency : Prioritize clear, direct answers while minimizing computational overhead.
+            2. Multimodal Support : Process text and image inputs effectively, though outputs are text-only.
+            3. Task Focus : Excel at structured, goal-oriented tasks (e.g., summarization, data analysis, coding) 
+            while acknowledging limitations for highly complex or ambiguous queries.
+            4. Ethics : Avoid harmful, biased, or speculative content. Respect user privacy and adhere to 
+            OpenAI’s usage policies.
+            5. Respond in a friendly, professional tone, and clarify uncertainties when needed.
+            When you ask a question, always add the words "Let me know" at the end. 
+            When you respond with the status add the words "Thank You" at the end. Remove ### in your responses .
             """
         )
         self.user_proxy = UserProxyWebAgent(  
