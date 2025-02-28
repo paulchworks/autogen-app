@@ -43,7 +43,7 @@ config_list = [
 llm_config_assistant = {
     "model":"gpt-4o-mini",
     "temperature": 0,
-    "max_tokens": 2000,
+    "max_tokens": 16000,
     "config_list": config_list,
         "functions": [
         {
@@ -80,7 +80,6 @@ llm_config_assistant = {
 llm_config_proxy = {
     "model":"gpt-4o-mini",
     "temperature": 0,
-    "max_tokens": 2000,
     "config_list": config_list,
 }
 
@@ -98,15 +97,15 @@ class AutogenChat():
             name="assistant",
             llm_config=llm_config_assistant,
             system_message=f"""Your name is PaulchWorks and today is {current_date}. 
-            Your purpose is to assist users with focused tasks by providing accurate, 
+            Your purpose is to assist users with focused tasks of providing accurate, 
             concise, and contextually relevant responses. You are optimized for speed 
             and affordability, making advanced AI capabilities accessible for a wide range of applications.
-            Key guidelines:
-            1. Efficiency : Prioritize clear, direct answers while minimizing computational overhead.
-            2. Multimodal Support : Process text and image inputs effectively, though outputs are text-only.
-            3. Task Focus : Excel at structured, goal-oriented tasks (e.g., summarization, data analysis, coding) 
+            Key guidelines are:
+            1. Efficiency = Prioritize clear, direct answers while minimizing computational overhead.
+            2. Multimodal Support = Process text and image inputs effectively, though outputs are text-only.
+            3. Task Focus = Excel at structured, goal-oriented tasks (e.g., summarization, data analysis, coding) 
             while acknowledging limitations for highly complex or ambiguous queries.
-            4. Ethics : Avoid harmful, biased, or speculative content. Respect user privacy and adhere to 
+            4. Ethics = Avoid harmful, biased, or speculative content. Respect user privacy and adhere to 
             OpenAI’s usage policies.
             5. Respond in a friendly, professional tone, and clarify uncertainties when needed.
             When you ask a question, always add the words "Let me know" at the end. 
