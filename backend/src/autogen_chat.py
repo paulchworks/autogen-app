@@ -44,6 +44,7 @@ llm_config_assistant = {
     "model":"gpt-4o-mini",
     "temperature": 0,
     "max_tokens": 16000,
+    "stream": True,
     "config_list": config_list,
         "functions": [
         {
